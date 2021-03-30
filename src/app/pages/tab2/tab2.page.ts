@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { IonSegment } from '@ionic/angular';
+import { IonInfiniteScroll, IonSegment } from '@ionic/angular';
+import { Article } from 'src/app/interfaces/interfaces';
 import { NoticiasService } from '../../services/noticias.service';
 
 @Component({
@@ -10,8 +11,10 @@ import { NoticiasService } from '../../services/noticias.service';
 export class Tab2Page implements OnInit, AfterViewInit {
 
   @ViewChild( IonSegment ) segment: IonSegment;
+  @ViewChild( IonInfiniteScroll ) infiniteScroll: IonInfiniteScroll;
   // @ViewChild('mySegment', { read: ElementRef }) private segment: ElementRef;
   categorias = [];
+  noticias: Article[] = [];
   constructor( private noticiasService: NoticiasService ) {
     this.categorias = [ 'business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology' ];
   }
@@ -20,16 +23,26 @@ export class Tab2Page implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.noticiasService.getTopHeadlinesCategories( this.categorias[0] ).subscribe( res => {
-      console.log(res);
-    });
+    this.cargarNoticias( this.categorias[0] );
   }
 
   segmentChanged( event ) {
-
-    const valorSegmento = event.detail.value;
-    console.log(valorSegmento);
-
+    console.log(event);
+    this.noticias = [];
+    this.cargarNoticias( event.detail.value );
   }
 
+  cargarNoticias( categoria: string, event? ) {
+    this.noticiasService.getTopHeadlinesCategories( categoria ).subscribe( res => {
+      this.noticias.push( ...res.articles );
+      if ( event ) {
+        event.target.complete();
+        return;
+      }
+    });
+  }
+
+  loadData( event ) {
+    this.cargarNoticias( this.segment.value, event );
+  }
 }
