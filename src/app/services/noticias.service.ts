@@ -1,6 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaTopHeadlines } from '../interfaces/interfaces';
+import { environment } from '../../environments/environment';
+
+const apiKey = environment.apiKey;
+const apiUrl = environment.apiUrl;
+
+const headers = new HttpHeaders({
+  'X-Api-key' : apiKey
+});
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +17,16 @@ export class NoticiasService {
 
   constructor( private http: HttpClient ) { }
 
+  exeRequest<T>( req: string ){
+    req = `${ apiUrl }${ req }`;
+    return this.http.get<T>( req, { headers } );
+  }
+
   getTopHeadlines(){
-    return this.http.get<RespuestaTopHeadlines>(`https://newsapi.org/v2/everything?q=tesla&from=2021-02-26&sortBy=publishedAt&apiKey=cdd1ffac445f4f29a80ab4cb6ecab326`);
+    return this.exeRequest<RespuestaTopHeadlines>(`/top-headlines?country=us`);
+  }
+
+  getTopHeadlinesCategories( categoria: string ){
+    return this.exeRequest<RespuestaTopHeadlines>(`/top-headlines?country=us&category=${ categoria }`);
   }
 }
