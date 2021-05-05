@@ -1,3 +1,4 @@
+import { flatten } from '@angular/compiler';
 import { Component, Input, OnInit } from '@angular/core';
 import { Article } from '../../interfaces/interfaces';
 
@@ -9,6 +10,7 @@ import { Article } from '../../interfaces/interfaces';
 export class NoticiasComponent implements OnInit {
 
   @Input() noticias: Article[] = [];
+  @Input() enFavoritos = false;
   constructor() { }
 
   ngOnInit() {}

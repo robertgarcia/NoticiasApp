@@ -10,7 +10,7 @@
       </div>
     </ion-card-subtitle>
     <ion-card-title (click)="abrirNoticia()" >{{ noticia.title }}</ion-card-title>
-    <ion-img (click)="abrirNoticia()" *ngIf="noticia.urlToImage" [src]="noticia.urlToImage"></ion-img>
+    <ion-img (click)="abrirNoticia()" *ngIf="noticia.urlToImage" [src]="noticia.urlToImage" class="animated fadeIn"></ion-img>
     <ion-card-content>
       {{ noticia.description }}
     </ion-card-content>
